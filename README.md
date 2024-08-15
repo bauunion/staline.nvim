@@ -2,6 +2,9 @@
 TLDR;<br/> staline(**sta**tus**line**): A simple statusline for neovim written in lua.<br/>
 stabline(s-**tabline**): A simple bufferline for neovim written in lua. (sry didnt get a better name.)
 
+### bauunions fork
+I am trying to change/rewrite part of the plguin so the special filetypes are rendered inside the regular status line instead of replacing it entirely.
+
 ### Requirements
 * Requires neovim version >= 0.10
 * `vim.opt.laststatus=2` in your init.lua for statusline. (or `3` for global line)

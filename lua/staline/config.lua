@@ -14,6 +14,12 @@ return {
         right = { 'line_column' }
     },
 
+    special_sections = {
+        left = { },
+        mid = { 'special_name' },
+        right = { },
+    },
+
     lsp_symbols = { Error="󰅙 ", Info="󰋼 ", Warn=" ", Hint="" },
 
     defaults = {
@@ -41,10 +47,10 @@ return {
     special_table = {
         NvimTree = { 'NvimTree', ' ' },
         packer = { 'Packer',' ' },
-        dashboard = { 'Dashboard', '  ' },
+        dashboard = { 'Dashboard', '  ', clear = true },
         help = { 'Help', '󰗚 ' },
         qf = { "QuickFix", " " },
-        alpha = { "Alpha", "  " },
+        alpha = { "Alpha", "  ", clear = true },
         Jaq = { "Jaq", "  "},
         Fm = { "Fm", "  "},
         TelescopePrompt = { 'Telescope', "  " },

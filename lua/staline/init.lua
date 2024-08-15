@@ -149,9 +149,12 @@ local parse_section = function(section)
 end
 
 M.get_statusline = function(status)
+    local special = nil
     if conf.special_table[vim.bo.ft] ~= nil then
-        local special = conf.special_table[vim.bo.ft]
-        return "%#Staline#%=" .. special[2] .. special[1] .. "%="
+        special = conf.special_table[vim.bo.ft]
+        if special['clear'] == true then
+            return "%#Staline#%=" .. special[2] .. special[1] .. "%="
+        end
     end
 
     M.sections = {}
@@ -189,9 +192,16 @@ M.get_statusline = function(status)
     M.sections['diagnostics']      = get_lsp()
     M.sections['lsp_name']         = lsp_client_name()
     M.sections['cwd']              = " " .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. " "
+    M.sections['special_name']     = ""
 
     local staline = ""
     local section_t = status and 'sections' or 'inactive_sections'
+    if special ~= nil then
+        section_t = 'special_sections'
+        M.sections['special_name'] = "" .. special[2] .. special[1]
+        M.sections['file_name']    = ""
+    end
+
     for _, major in ipairs({ 'left', 'mid', 'right' }) do
         -- fix background glitch
         if conf[section_t]['left'][1] == nil then

@@ -176,6 +176,7 @@ M.get_statusline = function(status)
     M.sections['branch']           = " "..("%{get(b:, 'staline_branch', '')}").." "
     M.sections['git_branch']       = " "..("%{get(b:, 'staline_branch', '')}").." "
     M.sections['git_diff']         = " "..("%{get(b:, 'gitsigns_status', '')}").." "
+    M.sections['file_enc']         = " "..(vim.bo.fileencoding or ""):upper().." "
     M.sections['file_name']        = " "..f_icon.." "..f_name..edited.." "
     M.sections['f_name']           = f_name
     M.sections['f_icon']           = f_icon

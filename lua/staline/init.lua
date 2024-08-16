@@ -164,8 +164,7 @@ M.get_statusline = function(status)
     local bg_color = status and t.bg or t.inactive_bgcolor
     local modeIcon = conf.mode_icons[mode] or "󰋜 "
 
-    local f_name = t.full_path and '%F' or '%t'
-    -- TODO: original color of icon
+    local f_name = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):match("^.+[\\/](.+)$") or ""    -- TODO: original color of icon
     local f_icon = util.get_file_icon(vim.fn.expand('%:t'), vim.fn.expand('%:e'))
     local edited = vim.bo.mod and t.mod_symbol or ""
     -- TODO: need to support b, or mb?
@@ -202,6 +201,11 @@ M.get_statusline = function(status)
         M.sections['file_name']    = ""
     end
 
+    local parsed_sections = {
+        ['left']  = "",
+        ['mid']   = "",
+        ['right'] = "",
+    }
     for _, major in ipairs({ 'left', 'mid', 'right' }) do
         -- fix background glitch
         if conf[section_t]['left'][1] == nil then
@@ -209,10 +213,24 @@ M.get_statusline = function(status)
         end
 
         for _, section in pairs(conf[section_t][major]) do
-            staline = staline .. parse_section(section).."%#StalineNone#"
+            parsed_sections[major] = parsed_sections[major] .. parse_section(section).."%#StalineNone#"
         end
-        if major ~= 'right' then staline = staline .. "%=" end
     end
+
+    local length_l = string.len(string.gsub(parsed_sections['left'], '%#.-#', ""))
+    local length_r = string.len(string.gsub(parsed_sections['right'], '%#.-#', ""))
+    local offset_r = length_l - length_r
+    local padding = ""
+    for i = 1, math.abs(offset_r) do
+        padding = " " .. padding
+    end
+    if offset_r < 0 then
+        parsed_sections['left'] = parsed_sections['left'] .. padding
+    else
+        parsed_sections['right'] = padding .. parsed_sections['right']
+    end
+
+    staline = parsed_sections['left'] .. "%=" .. parsed_sections['mid'] .. "%=" .. parsed_sections['right']
 
     return staline
 end

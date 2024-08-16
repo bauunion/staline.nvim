@@ -3,7 +3,8 @@ TLDR;<br/> staline(**sta**tus**line**): A simple statusline for neovim written i
 stabline(s-**tabline**): A simple bufferline for neovim written in lua. (sry didnt get a better name.)
 
 ### bauunions fork
-I am trying to change/rewrite part of the plguin so the special filetypes are rendered inside the regular status line instead of replacing it entirely.
+This fork adds the option to display the special filetypes (e.g. Telescope) along with your regular Statusline - or even change it to something unique!
+It also provides an experimental opt-in automatic padding that tries to align the middle section more consistently.
 
 ### Requirements
 * Requires neovim version >= 0.10
@@ -79,7 +80,13 @@ require('staline').setup()
 >         mid  = { 'file_name' },
 >         right = { 'line_column' }
 >     },
+>     special_sections = {
+>         left = { },
+>         mid = { 'special_name' },
+>         right = { },
+>    },
 >     special_table = {
+>         dashboard = { 'Dashboard', '  ', clear = true },
 >         NvimTree = { 'NvimTree', ' ' },
 >         packer = { 'Packer',' ' },        -- etc
 >     },
@@ -114,8 +121,10 @@ require('staline').setup()
 
 To know more about colors and highlights, check [highlights wiki](https://github.com/tamton-aquib/staline.nvim/wiki/Highlights)
 
+To force a filetype in the special_table to ignore the special_section table and display only its Name and Symbol in the center of the statusline, simply put a third value "clear = true" into its definition as seen in the default settings for the filetype "dashboard".
+
 __A section (left, right or mid) can take:__
-* Already defnined section or a simple string:
+* Already defined section or a simple string:
 	* `"branch"`
 	* `"a simple string"`
 * An array of { highlight, string }

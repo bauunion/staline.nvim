@@ -150,8 +150,16 @@ end
 
 M.get_statusline = function(status)
     local special = nil
+    local f_name = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):match("^.+[\\/](.+)$") or ""    -- TODO: original color of icon
     if conf.special_table[vim.bo.ft] ~= nil then
-        special = conf.special_table[vim.bo.ft]
+        -- special = conf.special_table[vim.bo.ft]
+        if conf.special_table[vim.bo.ft][f_name] ~= nil then
+            special = conf.special_table[vim.bo.ft][f_name]
+        elseif type(conf.special_table[vim.bo.ft][1]) == "string" then
+            special = conf.special_table[vim.bo.ft]
+        else
+            special = { ', filename: '..f_name, 'filetype: '..vim.bo.ft }
+        end
         if special['clear'] == true then
             return "%#Staline#%=" .. special[2] .. special[1] .. "%="
         end
@@ -164,7 +172,6 @@ M.get_statusline = function(status)
     local bg_color = status and t.bg or t.inactive_bgcolor
     local modeIcon = conf.mode_icons[mode] or "󰋜 "
 
-    local f_name = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):match("^.+[\\/](.+)$") or ""    -- TODO: original color of icon
     local f_icon = util.get_file_icon(vim.fn.expand('%:t'), vim.fn.expand('%:e'))
     local edited = vim.bo.mod and t.mod_symbol or ""
     -- TODO: need to support b, or mb?
